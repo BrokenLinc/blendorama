@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Blendorama</title>
+	</head>
+	<body style="background-color:#888;">
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+		<script>
+
+		var blendModes = [
+			'overlay', 
+			'darken', 
+			'lighten', 
+			'hard-light', 
+			'soft-light', 
+			'difference'
+		];
+		function getNewPhotos() {
+			$.ajax({
+				url: '//api.flickr.com/services/feeds/photos_public.gne?format=json', 
+				type: 'GET',
+				dataType: 'jsonp'
+			});
+		}
+		function rint(min, max) {
+			return min + Math.floor(Math.random() * (max-min+1));
+		}
+		function jsonFlickrFeed(result) {
+			var images = $.map(result.items.slice(0,3), function(item, index){
+				return 'url('+item.media.m+')';
+			});
+			$('body').css({
+				'background-blend-mode': blendModes[rint(0,blendModes.length-1)],
+				'background-image': images.join(', ')
+			});
+		}
+		$(document).on('click', function(){
+			getNewPhotos();
+		});
+		getNewPhotos();
+		</script>
+
+	</body>
+</html>
